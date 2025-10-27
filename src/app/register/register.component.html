@@ -1,0 +1,19 @@
+<div class="register-container">
+  <h2>Register</h2>
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <label for="email">Email</label>
+    <input id="email" formControlName="email" type="email" />
+    
+    <label for="policyId">Policy ID</label>
+    <input id="policyId" formControlName="policyId" type="text" />
+
+    <label for="password">Password</label>
+    <input id="password" formControlName="password" type="password" />
+
+     <label for="reenterPassword">Reenter password</label>
+    <input id="reenterPassword" formControlName="reenterPassword" type="password" />
+
+    <button type="submit">Submit</button>
+  </form>
+  <div *ngIf="showError"> Error in registration</div>
+</div>

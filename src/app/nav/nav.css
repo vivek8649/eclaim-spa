@@ -1,0 +1,22 @@
+.navbar {
+  display: flex;
+  gap: 20px;
+  padding: 10px;
+  background-color: #222;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+}
+
+.navbar a.active {
+  font-weight: bold;
+  border-bottom: 2px solid #fff;
+}
+
+.pull-right {
+  margin-left: auto;
+  float: right;
+  cursor: pointer;
+}

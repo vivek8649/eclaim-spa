@@ -1,0 +1,9 @@
+<!-- nav.component.html -->
+<nav class="navbar">
+    <a routerLink="/home" routerLinkActive="active">Home</a>
+    <a *ngIf="!userLoggedIn" class="pull-right" routerLink="/login" routerLinkActive="active">Login</a>
+    <select (change)="logout($event)" class="pull-right" *ngIf="userLoggedIn" id="Role">
+        <option [value]="email">{{email}}</option>
+        <option value="logout">Logout</option>
+    </select>
+</nav>

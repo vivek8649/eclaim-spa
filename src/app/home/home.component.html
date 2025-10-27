@@ -1,0 +1,38 @@
+<div class="claims-container">
+  <div class="claims-header">
+    <h2>My Claims</h2>
+    <button class="btn-primary" (click)="createNewClaim()">+ New Claim</button>
+  </div>
+
+  <div class="claims-table-wrapper">
+    <table class="claims-table">
+      <thead>
+        <tr>
+          <th>Claim ID</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Submitted On</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let claim of userClaims">
+          <td>{{ claim.id }}</td>
+          <td>{{ claim.type }}</td>
+          <td>
+            <span
+              class="status-badge"
+              [ngClass]="{
+                'approved': claim.status === 'Approved',
+                'pending': claim.status === 'Pending',
+                'rejected': claim.status === 'Rejected'
+              }"
+            >
+              {{ claim.status }}
+            </span>
+          </td>
+          <td>{{ claim.submittedOn | date:'mediumDate' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

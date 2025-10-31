@@ -1,0 +1,108 @@
+<div class="modal-header">
+  <h5 class="modal-title">{{ claimData ? 'Edit Claim' : 'New Claim' }}</h5>
+  <button type="button" class="btn-close btn-close-sm" aria-label="Close" (click)="onCancel()"></button>
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="claimForm">
+    <!-- your existing form content -->
+    <div class="mb-3">
+      <label for="IncidentType">Incident Type</label>
+      <select id="incidentType" formControlName="incidentType" class="form-select">
+        <option value="">Select type</option>
+        <option *ngFor="let t of incidentTypes" [value]="t">{{ t }}</option>
+      </select>
+    </div>
+
+      <!-- 🗓 Incident Date -->
+  <div class="mb-3">
+    <label class="form-label">Incident Date</label>
+    <input 
+      type="date" 
+      class="form-control" 
+      formControlName="incidentDate">
+  </div>
+
+    <div class="mb-3">
+      <label for="ClaimDescription">Claim Description</label>
+      <textarea class="form-control" formControlName="claimDescription"></textarea>
+    </div>
+
+      <!-- ✅ Claim Amount -->
+    <div class="mb-3">
+      <label for="claimAmount" class="form-label">Claim Amount</label>
+      <input
+        type="number"
+        id="claimAmount"
+        formControlName="totalClaimed"
+        class="form-control form-control-sm"
+        placeholder="Enter claimed amount"
+        min="0"
+        step="0.01"
+      />
+    </div>
+
+    <!-- 📎 File Upload -->
+  <div class="mb-3">
+    <label class="form-label">Upload Document</label>
+    <input 
+      type="file" 
+      class="form-control form-control-sm"
+      (change)="onFileSelected($event)" 
+      accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" />
+    
+    <!-- Optional: show file name -->
+    <div *ngIf="selectedFileName" class="small text-muted mt-1">
+      Selected: {{ selectedFileName }}
+    </div>
+  </div>
+
+    <!-- Address Fields -->
+    <div class="row">
+      <div class="col-md-6 mb-2">
+        <label for="claimCountry">Claim Country</label>
+        <select id="claimCountry" formControlName="claimCountry" class="form-select">
+          <option value="">Select country</option>
+          <option *ngFor="let c of countries" [value]="c">{{ c }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-2">
+        <label>Street</label>
+        <input class="form-control" formControlName="claimStreet" />
+      </div>
+      <div class="col-md-6 mb-2">
+        <label>City</label>
+        <input class="form-control" formControlName="claimCity" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-2">
+        <label>State</label>
+        <input class="form-control" formControlName="claimState" />
+      </div>
+      <div class="col-md-6 mb-2">
+        <label>Zip</label>
+        <input class="form-control" formControlName="claimZip" />
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer d-flex justify-content-start align-items-center gap-2">
+  <button 
+    type="button" 
+    class="btn btn-primary btn-sm"
+    (click)="onSubmit()">
+    Save
+  </button>
+    <button 
+    type="button" 
+    class="btn btn-outline-secondary btn-sm"
+    (click)="onCancel()">
+    Cancel
+  </button>
+</div>

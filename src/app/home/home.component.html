@@ -1,7 +1,7 @@
 <div class="claims-container">
   <div class="claims-header">
     <h2>My Claims</h2>
-    <button class="btn-primary" (click)="createNewClaim()">+ New Claim</button>
+    <button class="btn-primary" (click)="openClaimForm()">+ New Claim</button>
   </div>
 
   <div class="claims-table-wrapper">
@@ -11,13 +11,15 @@
           <th>Claim ID</th>
           <th>Type</th>
           <th>Status</th>
+           <th>Processed claim</th>
+            <th>Total claim</th>
           <th>Submitted On</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let claim of userClaims">
-          <td>{{ claim.id }}</td>
-          <td>{{ claim.type }}</td>
+          <td>{{ claim.claimID }}</td>
+          <td>{{ claim.incidentType }}</td>
           <td>
             <span
               class="status-badge"
@@ -30,7 +32,9 @@
               {{ claim.status }}
             </span>
           </td>
-          <td>{{ claim.submittedOn | date:'mediumDate' }}</td>
+          <td>{{ claim.processedClaim }}</td>
+          <td>{{ claim.totalClaimed }}</td>
+          <td>{{ claim.createdDate | date:'mediumDate' }}</td>
         </tr>
       </tbody>
     </table>

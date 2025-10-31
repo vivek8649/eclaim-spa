@@ -1,7 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { BaseApiService } from "./base.http.service";
-import { Observable, Subject, tap } from "rxjs";
+import { catchError, Observable, Subject, tap } from "rxjs";
 import { Injectable } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+import { UserPolicyDetails } from "../model/user-policy-details";
 
 @Injectable({
     providedIn: 'root'
@@ -10,15 +12,24 @@ export class LoginService extends BaseApiService {
     private endpoint = 'api/auth/'; // Example endpoint
     private _token!: string;
     private _email!: string;
+    private _userId!: number;
     userLoggedInSubject = new Subject<boolean>();
+    redirectingToRegister: boolean = false;
 
     // This service can be expanded to include actual login logic, such as API calls.
-    constructor(protected override http: HttpClient) {
+    constructor(
+        protected override http: HttpClient,
+        private router: Router,
+        private activatedRoute: ActivatedRoute
+    ) {
         super(http);
-}
+    }
 
     public get token(): string {
         return this._token;
+    }
+    public get userId(): number {
+        return this._userId;
     }
     public get email(): string {
         return this._email;
@@ -27,9 +38,7 @@ export class LoginService extends BaseApiService {
     public login(email: string, password: string): Observable<LoginResponse> {
         return this.post<LoginResponse>(this.endpoint + 'login', { email, password }).pipe(
             tap(response => {
-                this._token = response.token; // Store the token or handle it as needed
-                this._email = decodeJwtManually(response.token).email;
-                this.userLoggedInSubject.next(true);
+                this.setLoginDetails(response.jwtToken);
             })
         );
     }
@@ -38,7 +47,7 @@ export class LoginService extends BaseApiService {
         return this.post<boolean>(this.endpoint + 'register', registerRequest)
     }
 
-      public logout(): Observable<boolean> {
+    public logout(): Observable<boolean> {
         return this.post<boolean>(this.endpoint + 'logout', {}, { withCredentials: true }).pipe(
             tap(() => {
                 this._token = '';
@@ -55,14 +64,17 @@ export class LoginService extends BaseApiService {
     public refreshAccessToken(): Observable<any> {
         return this.post(this.endpoint + 'refresh', {}, { withCredentials: true })
             .pipe(tap((res: any) => {
-                this._token = res.jwtToken;
-                this._email = decodeJwtManually(res.jwtToken).email;
-                this.userLoggedInSubject.next(true);
-            }
-            ));
+                this.setLoginDetails(res.jwtToken);
+
+            }))
     }
 
     public initializeApp() {
+        if (this.redirectingToRegister) {
+            this.redirectingToRegister = false;
+            return Promise.resolve(); // Skip token check when redirecting to register
+        }
+
         return new Promise<void>((resolve) => {
             const token = this.token;
             if (token && !this.isTokenExpired(token)) { // && !authService.isTokenExpired(token)
@@ -74,21 +86,27 @@ export class LoginService extends BaseApiService {
                         resolve()
                     },
                     error: () => {
+                        this.router.navigate(['/login']);
                         resolve(); // Let app start (user will be logged out)
                     }
                 });
             }
         });
     }
+
+    
+    private setLoginDetails(token: string) {
+        this._token = token; // Store the token or handle it as needed
+        this._email = decodeJwtManually(token).email;
+        this._userId = decodeJwtManually(token).sub;
+        this.userLoggedInSubject.next(true);
+    }
 }
 
 
 
 export interface LoginResponse {
-    token: string;
-    userId: number;
-    username: string;
-    // Add other fields as necessary
+    jwtToken: string;
 }
 
 export interface RegisterRequest {

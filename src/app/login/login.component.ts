@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoginService } from '../services/login.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterModule],
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
@@ -31,6 +31,10 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  public onGoToRegister() {
+   this.loginService.redirectingToRegister = true;
+    this.router.navigate(['/register']);
+  }
 
   onSubmit() {
     if (this.loginForm.invalid) {

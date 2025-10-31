@@ -30,12 +30,12 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       this.loginService.register(this.registerForm.value).subscribe({
-        next: (response) => {
-          if(response) {
+        next: () => {
             this.router.navigate(['/login']);
-          } else {
+        },
+        error: (err) => {
+            console.error('Registration failed:', err);
             this.showError = true;
-          }
         }
       });
     } else {
